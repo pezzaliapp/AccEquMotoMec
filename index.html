@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0f1115" />
+<meta name="description" content="Accessori equilibratura moto Cormach MEC — catalogo consultabile offline." />
+<title>AccEqu MotoMec · Cormach</title>
+
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+<link rel="apple-touch-icon" href="./icons/icon-192.png" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">
+      <span class="m-ring"></span>
+      <span class="m-dot"></span>
+    </span>
+    <div class="brand-text">
+      <div class="brand-line1">AccEqu<span class="accent"> / </span>MotoMec</div>
+      <div class="brand-line2">Accessori Equilibratura Moto · Cormach MEC</div>
+    </div>
+  </div>
+  <button class="btn-ghost" id="btnInfo" aria-label="Informazioni">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.5" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="main">
+
+  <!-- PRICE STATUS BAR -->
+  <section class="price-bar" id="priceBar" data-has-prices="false">
+    <div class="pb-left">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 7h6"/><path d="M7 12h10"/><path d="M9 17h6"/></svg>
+      <div>
+        <div class="pb-title" id="pbTitle">Nessun listino caricato</div>
+        <div class="pb-sub" id="pbSub">Carica l'Excel per vedere i prezzi netti</div>
+      </div>
+    </div>
+    <div class="pb-right">
+      <label class="btn-primary">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span>Carica listino</span>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" hidden />
+      </label>
+      <button class="btn-ghost danger" id="btnClear" hidden title="Rimuovi listino">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- SEARCH + FILTERS -->
+  <section class="tools">
+    <div class="search">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" id="search" placeholder="Cerca codice, descrizione, modello…" autocomplete="off" />
+      <button class="clear-x" id="clearSearch" aria-label="Pulisci ricerca" hidden>×</button>
+    </div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats" id="stats"></section>
+
+  <!-- CATALOG -->
+  <section class="catalog" id="catalog"></section>
+
+  <!-- EMPTY STATE when nothing matches -->
+  <div class="empty" id="empty" hidden>
+    <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <p>Nessun risultato</p>
+    <small>Prova a rimuovere qualche filtro</small>
+  </div>
+
+</main>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-modal="true" role="dialog">
+  <header class="drawer-head">
+    <div>
+      <div class="dh-code" id="dhCode">—</div>
+      <div class="dh-desc" id="dhDesc">—</div>
+    </div>
+    <button class="btn-ghost" id="drawerClose" aria-label="Chiudi">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </header>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<!-- INFO MODAL -->
+<div class="modal-backdrop" id="infoBackdrop" hidden></div>
+<div class="modal" id="infoModal" hidden role="dialog">
+  <header class="modal-head">
+    <h2>AccEqu / MotoMec</h2>
+    <button class="btn-ghost" id="infoClose" aria-label="Chiudi">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </header>
+  <div class="modal-body">
+    <p>Consultazione rapida del catalogo <strong>accessori per equilibratura moto</strong> Cormach MEC (Rev. 02/2025).</p>
+    <p>L'app non contiene prezzi: caricando il file Excel del listino dal pulsante <em>Carica listino</em>, l'app legge l'ultimo foglio <code>02_Codici_unici</code> e mostra i prezzi netti accanto a ciascun codice. Dove il prezzo è a zero viene indicato <em>prodotto non fornibile</em>.</p>
+    <p>Il file caricato resta esclusivamente nel tuo dispositivo (salvato in locale, mai inviato a server).</p>
+    <p class="micro">v1.0 · © Cormach S.r.l. · dati di catalogo e codici di proprietà di Cormach S.r.l.</p>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" hidden></div>
+
+<!-- QUOTE: floating action button -->
+<button class="quote-fab" id="quoteFab" aria-label="Apri preventivo" title="Preventivo">
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="9" y1="13" x2="15" y2="13"/>
+    <line x1="9" y1="17" x2="15" y2="17"/>
+  </svg>
+  <span class="fab-badge" hidden></span>
+</button>
+
+<!-- QUOTE: slide-up panel -->
+<div class="quote-backdrop" id="quoteBackdrop" hidden></div>
+<aside class="quote-panel" id="quotePanel" hidden role="dialog" aria-modal="true">
+  <header class="quote-head">
+    <div>
+      <div class="qh-title">Preventivo</div>
+      <div class="qh-sub">Margine sulla vendita · salva, esporta, invia</div>
+    </div>
+    <button class="btn-ghost" id="quoteClose" aria-label="Chiudi">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </header>
+  <div class="quote-body" id="quoteBody"></div>
+</aside>
+
+<!-- DRAFTS modal -->
+<div class="modal-backdrop" id="draftsBackdrop" hidden></div>
+<div class="modal" id="draftsModal" hidden role="dialog">
+  <header class="modal-head">
+    <h2>Bozze salvate</h2>
+    <button class="btn-ghost" id="draftsClose" aria-label="Chiudi">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </header>
+  <div class="modal-body" id="draftsList"></div>
+</div>
+
+<script src="./vendor/xlsx.full.min.js"></script>
+<script src="./data.js"></script>
+<script src="./app.js"></script>
+<script src="./quote.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(console.error);
+    });
+  }
+</script>
+
+</body>
+</html>
