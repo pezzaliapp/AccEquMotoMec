@@ -220,6 +220,10 @@
     `;
 
     const actions = `
+      <p class="q-hint">
+        WhatsApp, TXT e Copia mostrano al cliente solo quantità, prezzo unitario e totale.
+        Costo netto e margine restano visibili solo a te in questa schermata.
+      </p>
       <div class="q-actions">
         <button class="btn-primary q-btn" data-qact="whatsapp">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.1 1.6 5.9L0 24l6.3-1.6A12 12 0 0 0 12 24c6.6 0 12-5.4 12-12 0-3.2-1.3-6.2-3.5-8.5zM12 22c-1.9 0-3.7-.5-5.3-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A10 10 0 1 1 12 22zm5.5-7.5c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7 0a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2.1-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1 2.9 1.2 3.1c.1.2 2 3.1 5 4.3l1.6.6c.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
@@ -309,11 +313,11 @@
   function buildTextQuote() {
     const t = totals();
     const lines = [];
-    lines.push("PREVENTIVO — Accessori Equilibratura Moto (Cormach MEC)");
+    lines.push("OFFERTA — Accessori Equilibratura Moto (Cormach MEC)");
     lines.push("=".repeat(56));
-    if (quote.customer) lines.push("Cliente:    " + quote.customer);
-    if (quote.ref)      lines.push("Rif.:       " + quote.ref);
-    lines.push("Data:       " + fmtDate(Date.now()));
+    if (quote.customer) lines.push("Cliente: " + quote.customer);
+    if (quote.ref)      lines.push("Rif.:    " + quote.ref);
+    lines.push("Data:    " + fmtDate(Date.now()));
     lines.push("");
     if (!quote.lines.length) {
       lines.push("(nessun articolo)");
@@ -322,21 +326,20 @@
         const p = linePrices(l);
         const title = p.item ? p.item.title : l.code;
         lines.push(`• ${l.code} — ${title}`);
-        if (p.net > 0) {
-          lines.push(`  qty ${l.qty}  ·  netto ${fmtEur(p.net)}  ·  margine ${l.marginPct}%  ·  vendita ${fmtEur(p.sale)}  ·  totale ${fmtEur(p.lineSale)}`);
+        if (p.sale > 0) {
+          // qty × prezzo unitario = totale riga (nessun riferimento a netto o margine)
+          lines.push(`  qty ${l.qty}  ×  ${fmtEur(p.sale)}  =  ${fmtEur(p.lineSale)}`);
         } else {
-          lines.push(`  qty ${l.qty}  ·  ${p.unavailable ? "PRODOTTO NON FORNIBILE" : "prezzo non disponibile"}`);
+          lines.push(`  qty ${l.qty}  —  prezzo da confermare`);
         }
       }
     }
     lines.push("");
     lines.push("-".repeat(56));
-    lines.push(`Totale netto:   ${fmtEur(t.tNet)}`);
-    lines.push(`Totale margine: ${fmtEur(t.tMargin)}`);
-    lines.push(`TOTALE VENDITA: ${fmtEur(t.tSale)}`);
-    if (t.anyMissingPrice) lines.push("(!) Alcuni articoli non hanno prezzo — totale parziale.");
+    lines.push(`TOTALE: ${fmtEur(t.tSale)}`);
+    if (t.anyMissingPrice) lines.push("(alcuni articoli con prezzo da confermare)");
     lines.push("");
-    lines.push("Prezzi netti IVA esclusa. Documento indicativo.");
+    lines.push("Prezzi IVA esclusa. Offerta indicativa, valida 30 giorni.");
     return lines.join("\n");
   }
 

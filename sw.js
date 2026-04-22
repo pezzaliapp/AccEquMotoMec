@@ -1,6 +1,6 @@
 // AccEqu MotoMec — service worker
 // Cache first per gli asset statici, network first per l'HTML.
-const VERSION = "v1.2.0";
+const VERSION = "v1.2.1";
 const CACHE_STATIC = `accequ-static-${VERSION}`;
 const CACHE_RUNTIME = `accequ-runtime-${VERSION}`;
 
